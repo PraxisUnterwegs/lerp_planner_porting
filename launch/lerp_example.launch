@@ -1,28 +1,27 @@
 <launch>
-
-  <!-- GDB Debug Arguments -->
   <arg name="debug" default="false" />
   <arg unless="$(arg debug)" name="launch_prefix" value="" />
-  <arg     if="$(arg debug)" name="launch_prefix"
-           value="gdb -x $(find moveit_planners_lerp)/launch/gdb_settings.gdb --ex run --args" />
+  <arg if="$(arg debug)" name="launch_prefix"
+       value="gdb -x $(find moveit_planners_lerp)/launch/gdb_settings.gdb --ex run --args" />
 
-  <!-- Callgrind Arguments -->
   <arg name="callgrind" default="false" />
   <arg unless="$(arg callgrind)" name="launch_prefix2" value="" />
-  <arg     if="$(arg callgrind)" name="launch_prefix2" value="valgrind --tool=callgrind --collect-atstart=no" />
+  <arg if="$(arg callgrind)" name="launch_prefix2" value="valgrind --tool=callgrind --collect-atstart=no" />
 
-  <!-- Valgrind Arguments -->
   <arg name="valgrind" default="false" />
   <arg unless="$(arg valgrind)" name="launch_prefix3" value="" />
-  <arg     if="$(arg valgrind)" name="launch_prefix3" value="valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all" />
+  <arg if="$(arg valgrind)" name="launch_prefix3" value="valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all" />
+
+  <!-- Define robot_description -->
+  <param name="robot_description" command="xacro $(find panda_description)/urdf/panda.urdf.xacro" />
+
+  <!-- Load additional robot-specific parameters -->
+  <param name="robot_description_semantic" file="$(find panda_moveit_config)/config/panda.srdf" />
+  <rosparam file="$(find panda_moveit_config)/config/lerp_planning.yaml" command="load" />
 
   <!-- Launch main node -->
-  <node name="$(anon moveit_tutorials)" launch-prefix="$(arg launch_prefix) $(arg launch_prefix2) $(arg launch_prefix3)" pkg="lerp_motion_planner" type="lerp_example" respawn="false" output="screen">
-
-    <!-- Robot-specific settings -->
-    <rosparam file="$(find panda_moveit_config)/config/lerp_planning.yaml" command="load"/>
+  <node name="$(anon moveit_tutorials)" launch-prefix="$(arg launch_prefix) $(arg launch_prefix2) $(arg launch_prefix3)"
+        pkg="lerp_motion_planner" type="lerp_example" respawn="false" output="screen">
   </node>
-
-
-
 </launch>
+

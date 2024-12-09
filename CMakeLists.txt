@@ -11,10 +11,15 @@ find_package(moveit_core REQUIRED)
 find_package(moveit_ros_planning REQUIRED)
 find_package(moveit_msgs REQUIRED)
 find_package(Boost REQUIRED system filesystem date_time thread serialization)
+find_package(moveit_visual_tools REQUIRED)
+
 
 # Contains header file directories
 include_directories(include)
 include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
+include_directories(${moveit_visual_tools_INCLUDE_DIRS})
+include_directories(/home/jzf/ws_moveit/install/moveit_visual_tools/include)
+
 
 # Add an executable file
 add_executable(lerp_example src/lerp_example.cpp)
